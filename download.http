@@ -1,0 +1,4 @@
+GET https://adventofcode.com/2024/day/2/input
+Cookie: session={{session}}
+
+>> src/main/resources/day_02.txt
