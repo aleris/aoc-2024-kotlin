@@ -21,8 +21,8 @@ class Day03KtTest {
   }
 
   @Test
-  fun findAllMul() {
-    assertThat(Day03.findAllMul("mul(1,2)abcmul(3,4]mul(5,6)mul(7,8)"))
+  fun findAllMulNoRegex() {
+    assertThat(Day03.findAllMulNoRegex("mul(1,2)abcmul(3,4]mul(5,6)mul(7,8)", false))
         .containsExactly(Pair(1, 2), Pair(5, 6), Pair(7, 8))
   }
 
@@ -32,13 +32,19 @@ class Day03KtTest {
         .isEqualTo(1 * 2 + 5 * 6 + 7 * 8)
   }
 
-  @Test
-  fun excludeDisabled() {
-    assertThat(
-            Day03.excludeDisabled(
-                "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"))
-        .isEqualTo("xmul(2,4)&mul[3,7]!^?mul(8,5))")
-  }
+  //  @Test
+  //  fun findAllMul() {
+  //    assertThat(Day03.findAllMul("mul(1,2)abcmul(3,4]mul(5,6)mul(7,8)"))
+  //        .containsExactly(Pair(1, 2), Pair(5, 6), Pair(7, 8))
+  //  }
+  //
+  //  @Test
+  //  fun excludeDisabled() {
+  //    assertThat(
+  //            Day03.excludeDisabled(
+  //                "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"))
+  //        .isEqualTo("xmul(2,4)&mul[3,7]!^?mul(8,5))")
+  //  }
 
   @Test
   fun part1_test() {
