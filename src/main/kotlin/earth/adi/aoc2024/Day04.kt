@@ -6,7 +6,6 @@ class Day04 {
     const val INPUT_DAY_04 = "/day_04.txt"
 
     private val TARGET = arrayOf('X', 'M', 'A', 'S')
-    private val FLIP_TARGET = arrayOf('M', 'A', 'S')
     private val ALL_DIRECTIONS =
         // (dx, dy):
         // (-1,-1)  (0,-1)  (1,-1)
