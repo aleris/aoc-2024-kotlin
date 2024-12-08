@@ -49,7 +49,7 @@ class Day06 {
             print(guard.placement.direction.char)
           } else if (pos == map.additionalObstructionPosition) {
             print(Map.ADDITIONAL_OBSTRUCTION)
-          }else if (guard.patrolPath.map { it }.contains(pos)) {
+          } else if (guard.patrolPath.map { it }.contains(pos)) {
             print(Map.VISITED)
           } else {
             print(map.at(pos))
