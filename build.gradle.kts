@@ -10,6 +10,8 @@ version = "1.0-SNAPSHOT"
 repositories { mavenCentral() }
 
 dependencies {
+  implementation("com.github.ajalt.mordant:mordant:3.0.1")
+
   testImplementation(platform(libs.junitBom))
   testImplementation(libs.bundles.test)
 }

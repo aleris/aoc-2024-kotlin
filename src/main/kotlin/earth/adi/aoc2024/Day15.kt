@@ -1,5 +1,7 @@
 package earth.adi.aoc2024
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.terminal.Terminal
 import earth.adi.aoc2024.Day15.WarehouseMap.Companion.BOX
 import earth.adi.aoc2024.Day15.WarehouseMap.Companion.EMPTY
 import earth.adi.aoc2024.Day15.WarehouseMap.Companion.ROBOT
@@ -36,6 +38,24 @@ class Day15 {
     fun print() {
       data.forEach { row -> println(row.joinToString("")) }
       println()
+    }
+
+    fun print(terminal: Terminal) {
+      data.forEach { row ->
+        row.forEach { c ->
+          when (c) {
+            WALL -> terminal.print(red("$c"))
+            BOX -> terminal.print(blue("$c"))
+            ROBOT -> terminal.print(brightYellow("$c"))
+            EMPTY -> terminal.print(" ")
+            WIDE_BOX_H1 -> terminal.print(blue("$c"))
+            WIDE_BOX_H2 -> terminal.print(blue("$c"))
+            else -> terminal.print(white("$c"))
+          }
+        }
+        terminal.println()
+      }
+      terminal.println()
     }
 
     fun widen(): WarehouseMap {
@@ -222,6 +242,23 @@ class Day15 {
       //      map.print()
     }
 
+    fun moveRobot(terminal: Terminal) {
+      moves.forEach { move -> moveRobot(move, terminal) }
+    }
+
+    fun moveRobot(move: Move, terminal: Terminal) {
+      terminal.println(green("${move.char}"))
+      if (controller.move(robotPosition, move)) {
+        robotPosition = robotPosition.movedBy(move)
+      }
+      map.print(terminal)
+      terminal.cursor.move {
+        up(map.height + 2)
+        startOfLine()
+      }
+      Thread.sleep(10)
+    }
+
     fun sumOfGps(): Int {
       return controller.boxPositions().sumOf { it.gps }
     }
@@ -277,7 +314,8 @@ class Day15 {
     fun part2(inputResourceName: String): Int {
       val narrowWarehouse = input(inputResourceName)
       val warehouse = narrowWarehouse.withWidenMap()
-      warehouse.moveRobot()
+      val terminal = Terminal()
+      warehouse.moveRobot(terminal)
       val result = warehouse.sumOfGps()
       println("Day15 part2 = $result")
       return result

@@ -1,4 +1,4 @@
-GET https://adventofcode.com/2024/day/15/input
+GET https://adventofcode.com/2024/day/16/input
 Cookie: session={{session}}
 
->> src/main/resources/day_15.txt
+>> src/main/resources/day_16.txt
