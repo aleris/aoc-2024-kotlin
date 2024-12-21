@@ -41,7 +41,14 @@ class Day19KtTest {
   }
 
   @Test
+  fun part2_countPossibleDesigns() {
+    val onsen = Day19.input(INPUT_DAY_19_TEST)
+    val designSolver = Day19.DesignSolver(onsen.towels)
+    println(designSolver.countPossibleDesigns("rrbgbr"))
+  }
+
+  @Test
   fun part2_test() {
-    assertThat(Day19.part2(INPUT_DAY_19_TEST)).isEqualTo(-1)
+    assertThat(Day19.part2(INPUT_DAY_19_TEST)).isEqualTo(16)
   }
 }

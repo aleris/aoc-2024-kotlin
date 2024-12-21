@@ -9,6 +9,7 @@ class Day19 {
   data class DesignSolver(val towels: List<String>) {
     val towelSet = towels.toSet()
     val maxTowelLength = towels.maxOf { it.length }
+    val countedDesigns = mutableMapOf<String, Long>()
 
     fun isDesignPossible(design: String): Boolean {
       if (towelSet.contains(design)) {
@@ -23,6 +24,25 @@ class Day19 {
       }
       return false
     }
+
+    fun countPossibleDesigns(design: String): Long {
+      if (countedDesigns.containsKey(design)) {
+        return countedDesigns[design]!!
+      }
+      var result = 0L
+      if (towelSet.contains(design)) {
+        result++
+      }
+      for (endSlice in 0..min(maxTowelLength, design.length)) {
+        val slice = design.slice(0 until endSlice)
+        val remaining = design.slice(endSlice until design.length)
+        if (towelSet.contains(slice)) {
+          result += countPossibleDesigns(remaining)
+        }
+      }
+      countedDesigns[design] = result
+      return result
+    }
   }
 
   companion object {
@@ -30,7 +50,6 @@ class Day19 {
 
     fun part1(inputResourceName: String): Int {
       val input = input(inputResourceName)
-      println("towels:\n${input.towels.joinToString(" ")}")
       val designSolver = DesignSolver(input.towels)
       val result = input.designs.count { designSolver.isDesignPossible(it) }
       println("Day19 part1 = $result")
@@ -39,7 +58,8 @@ class Day19 {
 
     fun part2(inputResourceName: String): Long {
       val input = input(inputResourceName)
-      val result = 0L
+      val designSolver = DesignSolver(input.towels)
+      val result = input.designs.sumOf { designSolver.countPossibleDesigns(it) }
       println("Day19 part2 = $result")
       return result
     }
