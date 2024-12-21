@@ -15,6 +15,7 @@ class Day17 {
   }
 
   data class Instruction(val code: InstructionCode, val operand: Int) {
+
     companion object {
       fun at(program: List<Int>, pointer: Int): Instruction {
         val instructionNumber = program[pointer]
@@ -24,7 +25,7 @@ class Day17 {
     }
   }
 
-  data class Registers(var A: Int, var B: Int, var C: Int) {
+  data class Registers(var A: BigInteger, var B: BigInteger, var C: BigInteger) {
     companion object {
       fun from(lines: List<String>): Registers {
         return Registers(
@@ -34,7 +35,8 @@ class Day17 {
         )
       }
 
-      private fun parseRegister(line: String): Int = line.substringAfter(": ").toInt()
+      private fun parseRegister(line: String): BigInteger =
+          BigInteger.valueOf(line.substringAfter(": ").toLong())
     }
   }
 
@@ -52,13 +54,13 @@ class Day17 {
             registers.A = div(registers.A, combo(instruction.operand))
           }
           InstructionCode.bxl -> {
-            registers.B = registers.B xor instruction.operand
+            registers.B = registers.B xor BigInteger.valueOf(instruction.operand.toLong())
           }
           InstructionCode.bst -> {
-            registers.B = combo(instruction.operand) % 8
+            registers.B = combo(instruction.operand).mod(BigInteger.valueOf(8))
           }
           InstructionCode.jnz -> {
-            if (registers.A != 0) {
+            if (registers.A != BigInteger.ZERO) {
               pointer = instruction.operand
               continue
             }
@@ -67,7 +69,7 @@ class Day17 {
             registers.B = registers.B xor registers.C
           }
           InstructionCode.out -> {
-            output.add(combo(instruction.operand) % 8)
+            output.add(combo(instruction.operand).mod(BigInteger.valueOf(8)).toInt())
           }
           InstructionCode.bdv -> {
             registers.B = div(registers.A, combo(instruction.operand))
@@ -80,17 +82,34 @@ class Day17 {
       }
     }
 
-    fun findYourself(): Int {
-
-      return 0
+    fun findYourself(): BigInteger {
+      return findRecursiveAt(BigInteger.valueOf(0), 0)
     }
 
-    fun combo(operand: Int): Int {
+    fun findRecursiveAt(registerA: BigInteger, i: Int): BigInteger {
+      val c = Computer(Registers(registerA, registers.B, registers.C), program)
+      c.run()
+      if (c.output == program) {
+        return registerA
+      }
+      if (c.output == program.subList(program.size - i, program.size) || i == 0) {
+        for (n in 0 until program.size) {
+          val nextA = registerA.multiply(BigInteger.valueOf(8)) + BigInteger.valueOf(n.toLong())
+          val found = findRecursiveAt(nextA, i + 1)
+          if (found != BigInteger.valueOf(-1)) {
+            return found
+          }
+        }
+      }
+      return BigInteger.valueOf(-1)
+    }
+
+    fun combo(operand: Int): BigInteger {
       return when (operand) {
         0,
         1,
         2,
-        3, -> operand
+        3, -> BigInteger.valueOf(operand.toLong())
         4 -> registers.A
         5 -> registers.B
         6 -> registers.C
@@ -98,10 +117,8 @@ class Day17 {
       }
     }
 
-    fun div(numerator: Int, denominator: Int): Int {
-      val numerator = BigInteger.valueOf(numerator.toLong())
-      val denominator = BigInteger.valueOf(2).pow(denominator)
-      return numerator.divide(denominator).toInt()
+    fun div(numerator: BigInteger, denominator: BigInteger): BigInteger {
+      return numerator.divide(BigInteger.ONE.shiftLeft(denominator.toInt()))
     }
 
     companion object {
@@ -125,7 +142,7 @@ class Day17 {
       return result
     }
 
-    fun part2(inputResourceName: String): Int {
+    fun part2(inputResourceName: String): BigInteger {
       val computer = input(inputResourceName)
       val result = computer.findYourself()
       println("Day17 part2 = $result")

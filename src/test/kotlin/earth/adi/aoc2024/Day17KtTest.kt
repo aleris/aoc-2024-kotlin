@@ -114,6 +114,11 @@ class Day17KtTest {
   }
 
   @Test
+  fun part2_print() {
+    // Day17.input(INPUT_DAY_17).print()
+  }
+
+  @Test
   fun part2_test() {
     assertThat(Day17.part2(INPUT_DAY_17_TEST_C)).isEqualTo(117440)
   }
