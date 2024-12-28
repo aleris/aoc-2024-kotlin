@@ -44,8 +44,14 @@ class Day24 {
     fun findSwappedGates(): String {
       val lastZ = "z45"
       val nonXorOut = zGates.filter { it.out != lastZ && it.operator != Operator.XOR }
-
-      return ""
+      val nonXYXor =
+          gates.values.filter {
+            it.operator != Operator.XOR &&
+                !it.out.startsWith("z") &&
+                it.inputId1.first() !in "xy" &&
+                it.inputId2.first() !in "xy"
+          }
+      return (nonXYXor + nonXorOut).map { it.out }.sorted().joinToString(",")
     }
 
     companion object {
